@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class MultiplyExpression : BinaryExpression
+    internal class SinExpression : UnaryExpression
     {
         #region Constructor
-        public MultiplyExpression(Expression e1, Expression e2)
-            : base (e1, e2)
+        public SinExpression(Expression e1)
+            : base (e1)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MultiplyExpression"; } }
+        internal override string Name { get { return "SinExpression"; } }
         internal override object Value { get { throw new EvaluateException("Syntax Error");  } }
         #endregion Properties
 
@@ -24,10 +24,10 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         internal override Expression Evaluate(Expression[] values, out bool evaluted)
         {
             evaluted = false;
-            if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
+            if (values[0].NumericValue.HasValue)
             {
                 evaluted = true;
-                return new ConstExpression(values[0].NumericValue * values[1].NumericValue);
+                return new ConstExpression(Math.Sin(values[0].NumericValue.Value));
             }
             return null;
         }

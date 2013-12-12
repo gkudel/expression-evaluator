@@ -11,7 +11,7 @@ namespace ExpressionEvaluator
     {
         static void Main(string[] args)
         {
-            Parser p = Parser.GetInstance("[A] + [B] * [C]");
+            Parser p = Parser.GetInstance("tan(log([A]) + sqrt([B] ^ [C]))");
             object ret = p.Evaluate(new object[] { 10, 2, 4 });
         }
     }

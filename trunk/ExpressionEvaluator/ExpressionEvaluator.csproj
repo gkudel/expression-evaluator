@@ -42,12 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Evaluator\Exceptions.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\CosExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\DivideExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\Log10Expression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\MinusExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\MultiplyExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\PlusExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\PowerExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\SinExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\SqrtExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\TanExpression.cs" />
     <Compile Include="Evaluator\Expressions\BinaryExpression.cs" />
     <Compile Include="Evaluator\Expressions\ConstExpression.cs" />
     <Compile Include="Evaluator\Expressions\Expression.cs" />
+    <Compile Include="Evaluator\Expressions\UnaryExpression.cs" />
     <Compile Include="Evaluator\Expressions\VariableExpression.cs" />
     <Compile Include="Evaluator\Grammar.cs" />
     <Compile Include="Evaluator\ListStack.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GcmCmnTools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,6 +63,50 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 {
                     return null;
                 }
+            }
+        }
+
+        internal double? NumericValue
+        {
+            get
+            {
+                if (Value != null)
+                {
+                    double d = double.NaN;
+                    if (CmnTools.TryConvertToDouble(Value, out d))
+                    {
+                        return d;
+                    }
+                }
+                return null;
+            }
+        }
+
+        internal string StringValue
+        {
+            get
+            {
+                if (Value != null)
+                {
+                    return Value.ToString();
+                }
+                return null;
+            }
+        }
+
+        internal bool? BoolValue
+        {
+            get
+            {
+                if (Value != null)
+                {
+                    bool b = false;
+                    if(Boolean.TryParse(Value.ToString(), out b))
+                    {
+                        return b;
+                    }
+                }
+                return null;
             }
         }
         #endregion Properties
