@@ -153,26 +153,26 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                                 new MultiplyExpression(e1, e2), es.ExpressionStack));
                             break;
 
-                        /*case TranslationSymbolKind.DivideOpearator:
+                        case TranslationSymbolKind.DivideOpearator:
                            es.Push(BinaryExpression.trySimplify(
-                                new DivideExpression(e1, e2, (IArithmetic)operators[OperatorKind.Arithmetic]), es.Stack));
+                                new DivideExpression(e1, e2), es.ExpressionStack));
                             break;
 
                         case TranslationSymbolKind.PowerOperator:
                            es.Push(BinaryExpression.trySimplify(
-                                new PowerExpression(e1, e2, (IArithmetic)operators[OperatorKind.Arithmetic]), es.Stack));
+                                new PowerExpression(e1, e2), es.ExpressionStack));
                             break;
 
                         case TranslationSymbolKind.SqrtOperator:
                            es.Push(UnaryExpression.trySimplify(
-                                new SqrtExpression(e2), es.Stack));
+                                new SqrtExpression(e2), es.ExpressionStack));
                             break;
 
-                        case TranslationSymbolKind.AvgOperator:
+                        /*case TranslationSymbolKind.AvgOperator:
                            es.Push(ThreeArgumentsExpression.trySimplify(
                                 new AvgExpression(e1, e2, e3), es.Stack));
                             break;
-                        case TranslationSymbolKind.StdOperator:
+                         case TranslationSymbolKind.StdOperator:
                            es.Push(ThreeArgumentsExpression.trySimplify(
                                 new StdExpression(e1, e2, e3), es.Stack));
                             break;
@@ -184,38 +184,32 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                         case TranslationSymbolKind.AgeOfThePatientOperator:
                            es.Push(ThreeArgumentsExpression.trySimplify(
                                 new AgeOfThePatientExpression(e1, e2, e3), es.Stack));
-                            break;
+                            break;*/
                         case TranslationSymbolKind.Log10Operator:
                            es.Push(UnaryExpression.trySimplify(
-                                new Log10Expression(e2), es.Stack));
+                                new Log10Expression(e2), es.ExpressionStack));
                             break;
-
                         case TranslationSymbolKind.SinOperator:
                            es.Push(UnaryExpression.trySimplify(
-                                new SinExpression(e2), es.Stack));
+                                new SinExpression(e2), es.ExpressionStack));
                             break;
-
-                        case TranslationSymbolKind.IsNullOperator:
+                        /*case TranslationSymbolKind.IsNullOperator:
                            es.Push(UnaryExpression.trySimplify(
                                 new IsNullExpression(e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
                             break;
-
                         case TranslationSymbolKind.IsNotNullOperator:
                            es.Push(UnaryExpression.trySimplify(
                                 new IsNotNullExpression(e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
-                            break;
-
+                            break;*/
                         case TranslationSymbolKind.CosOperator:
                            es.Push(UnaryExpression.trySimplify(
-                                new CosExpression(e2), es.Stack));
+                                new CosExpression(e2), es.ExpressionStack));
                             break;
-
                         case TranslationSymbolKind.TanOperator:
                            es.Push(UnaryExpression.trySimplify(
-                                new TanExpression(e2), es.Stack));
+                                new TanExpression(e2), es.ExpressionStack));
                             break;
-
-                        case TranslationSymbolKind.AbsOperator:
+                        /*case TranslationSymbolKind.AbsOperator:
                            es.Push(UnaryExpression.trySimplify(
                                 new AbsExpression(e2), es.Stack));
                             break;
@@ -439,7 +433,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                             case TokenKind.DateTime:
                                 {
                                     ConstExpression constexpr = new ConstExpression(((DateTimeToken)c).Value);
-                                   es.Push(constexpr);
+                                    es.Push(constexpr);
                                 }
                                 break;
                             case TokenKind.Variable:

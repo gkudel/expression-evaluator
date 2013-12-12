@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class MultiplyExpression : BinaryExpression
+    internal class DivideExpression : BinaryExpression
     {
         #region Constructor
-        public MultiplyExpression(Expression e1, Expression e2)
+        public DivideExpression(Expression e1, Expression e2)
             : base (e1, e2)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MultiplyExpression"; } }
+        internal override string Name { get { return "DivideExpression"; } }
         internal override object Value { get { throw new EvaluateException("Syntax Error");  } }
         #endregion Properties
 
@@ -27,7 +27,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
             if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
             {
                 evaluted = true;
-                return new ConstExpression(values[0].NumericValue * values[1].NumericValue);
+                return new ConstExpression(values[0].NumericValue / values[1].NumericValue);
             }
             return null;
         }

@@ -17,15 +17,19 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 
         #region Properties
         internal override string Name { get { return "MinusExpression"; } }
-        internal override int ArgumentsCount { get { return 2; } }
         internal override object Value { get { throw new EvaluateException("Syntax Error");  } }
         #endregion Properties
 
         #region Evaluate
         internal override Expression Evaluate(Expression[] values, out bool evaluted)
         {
-            evaluted = true;
-            return new ConstExpression(double.Parse(values[0].Value.ToString()) - double.Parse(values[1].Value.ToString()));
+            evaluted = false;
+            if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
+            {
+                evaluted = true;
+                return new ConstExpression(values[0].NumericValue - values[1].NumericValue);
+            }
+            return null;
         }
         #endregion Evaluate
     }
