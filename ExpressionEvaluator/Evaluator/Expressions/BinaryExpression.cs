@@ -10,7 +10,6 @@ namespace ExpressionEvaluator.Evaluator.Expressions
     {
         #region Members
         private Expression e1, e2;
-        private bool evaluable;
         #endregion Members
 
         #region Constructor
@@ -18,16 +17,23 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             this.e1 = e1;
             this.e2 = e2;
-            evaluable = e1.Evaluable && e2.Evaluable;
+            _evaluable = e1.Evaluable && e2.Evaluable;
         }
         #endregion Constructor
 
         #region Properties
         internal override int ArgumentsCount { get { return 2; } }
+        internal override object Value
+        {
+            get
+            {
+                return Evaluate(new Expression[] { e1, e2 }).Value;
+            }
+        }
         #endregion Properties
 
         #region Try Simplify
-        public static Expression trySimplify(BinaryExpression e, ListStack es)
+        public static Expression trySimplify(BinaryExpression e, Expression es)
         {
             if (e.Evaluable)
             {

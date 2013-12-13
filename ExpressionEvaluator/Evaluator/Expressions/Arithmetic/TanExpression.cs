@@ -17,16 +17,15 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 
         #region Properties
         internal override string Name { get { return "TanExpression"; } }
-        internal override object Value { get { throw new EvaluateException("Syntax Error");  } }
         #endregion Properties
 
         #region Evaluate
-        internal override Expression Evaluate(Expression[] values, out bool evaluted)
+        internal override Expression Evaluate(Expression[] values, out bool evaluated)
         {
-            evaluted = false;
+            evaluated = false;
             if (values[0].NumericValue.HasValue)
             {
-                evaluted = true;
+                evaluated = true;
                 return new ConstExpression(Math.Tan(values[0].NumericValue.Value));
             }
             return null;

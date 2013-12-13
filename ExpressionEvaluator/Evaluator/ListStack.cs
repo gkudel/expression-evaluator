@@ -14,14 +14,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
 
         public void Push(Expression v) 
         {
-            if (Count == 0 || !this[Count - 1].InnerStack)
-            {
-                Add(v);
-            }
-            else
-            {
-                this[Count - 1].Push(v);
-            }
+            Add(v);
         }
 
         public Expression Pop()
