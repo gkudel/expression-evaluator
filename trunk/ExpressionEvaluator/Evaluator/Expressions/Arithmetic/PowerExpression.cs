@@ -17,16 +17,15 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 
         #region Properties
         internal override string Name { get { return "PowerExpression"; } }
-        internal override object Value { get { throw new EvaluateException("Syntax Error");  } }
         #endregion Properties
 
         #region Evaluate
-        internal override Expression Evaluate(Expression[] values, out bool evaluted)
+        internal override Expression Evaluate(Expression[] values, out bool evaluated)
         {
-            evaluted = false;
+            evaluated = false;
             if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
             {
-                evaluted = true;
+                evaluated = true;
                 return new ConstExpression(Math.Pow(values[0].NumericValue.Value, values[1].NumericValue.Value));
             }
             return null;

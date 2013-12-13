@@ -5,6 +5,9 @@ using System;
 using GcmCmnTools;
 using System.Linq;
 using ExpressionEvaluator.Evaluator.Expressions.Arithmetic;
+using ExpressionEvaluator.Evaluator.Expressions.Compare;
+using ExpressionEvaluator.Evaluator.Expressions.Logic;
+using ExpressionEvaluator.Evaluator.Expressions.Block;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -55,7 +58,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         #region Methods
         public string[] GetVariables()
         {
-            return es.ExpressionStack.GetVariables();
+            return new string[] { };// es.GetVariables();
         }
                
         private IEnumerator<string> Scan(IEnumerator<string> en)
@@ -99,11 +102,6 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     Expression e3 = null;
                     Expression e2 = null;
                     Expression e1 = null;
-                    if (ns.KindTR != TranslationSymbolKind.ElseOperator)
-                    {
-                        e2 = es.ExpressionStack.Pop();
-                    }
-
                     switch (ns.KindTR)
                     {
                         case TranslationSymbolKind.PlusOperator:
@@ -124,273 +122,244 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                         case TranslationSymbolKind.LogOperator:
                         case TranslationSymbolKind.RoundOperator:
                         case TranslationSymbolKind.BusulfanCalculationOperator:
-                            e1 = es.ExpressionStack.Pop();
+                            e2 = es.Pop();
                             break;
                         case TranslationSymbolKind.AvgOperator:
                         case TranslationSymbolKind.StdOperator:
                         case TranslationSymbolKind.CVOperator:
                         case TranslationSymbolKind.AgeOfThePatientOperator:
                             e3 = e2;
-                            e2 = es.ExpressionStack.Pop();
-                            e1 = es.ExpressionStack.Pop();
+                            e2 = es.Pop();
+                            e1 = es.Pop();
                             break;
                     }
 
-                    switch (ns.KindTR)
+                    e1 = es.Pop();
+
+                    Expression ex = null;
+                    switch (ns.KindTR)                    
                     {
                         case TranslationSymbolKind.PlusOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new PlusExpression(e1, e2), es.ExpressionStack));
+                           ex = BinaryExpression.trySimplify(
+                                new PlusExpression(e1, e2), es);
                             break;
-
                         case TranslationSymbolKind.MinusOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new MinusExpression(e1, e2), es.ExpressionStack));
+                           ex = BinaryExpression.trySimplify(
+                                new MinusExpression(e1, e2), es);
                             break;
-
                         case TranslationSymbolKind.MultiplyOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new MultiplyExpression(e1, e2), es.ExpressionStack));
+                           ex = BinaryExpression.trySimplify(
+                                new MultiplyExpression(e1, e2), es);
                             break;
-
                         case TranslationSymbolKind.DivideOpearator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new DivideExpression(e1, e2), es.ExpressionStack));
+                           ex = BinaryExpression.trySimplify(
+                                new DivideExpression(e1, e2), es);
                             break;
-
                         case TranslationSymbolKind.PowerOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new PowerExpression(e1, e2), es.ExpressionStack));
+                           ex = BinaryExpression.trySimplify(
+                                new PowerExpression(e1, e2), es);
                             break;
-
                         case TranslationSymbolKind.SqrtOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new SqrtExpression(e2), es.ExpressionStack));
+                           ex = UnaryExpression.trySimplify(
+                                new SqrtExpression(e1), es);
                             break;
-
+                        case TranslationSymbolKind.Log10Operator:
+                           ex = UnaryExpression.trySimplify(
+                                new Log10Expression(e1), es);
+                            break;
+                        case TranslationSymbolKind.SinOperator:
+                           ex = UnaryExpression.trySimplify(
+                                new SinExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.CosOperator:
+                           ex = UnaryExpression.trySimplify(
+                                new CosExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.TanOperator:
+                           ex = UnaryExpression.trySimplify(
+                                new TanExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.AbsOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new AbsExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.AcosOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new AcosExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.AsinOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new AsinExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.AtanOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new AtanExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.CeilingOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new CeilingExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.CoshOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new CoshExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.ExpOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new ExpExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.FloorOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new FloorExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.MaxOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new MaxExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.MinOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new MinExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.RoundOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new RoundExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.LogOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new LogExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.SinhOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new SinhExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.TanhOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new TanhExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.TruncateOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new TruncateExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.UnaryMinusOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new UnaryMinusExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.GreaterOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new GreterExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.LessOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new LessExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.LessOrEqualOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new LessOrEqualExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.EqualOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new EqualExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.NotEqualOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new NotEqualExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.GreaterOrEqualOperator:
+                            ex = BinaryExpression.trySimplify(
+                                 new GreaterOrEqualExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.NegativeOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new NegativExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.AndOperator:
+                           ex = BinaryExpression.trySimplify(
+                                new AndExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.OrOperator:
+                           ex = BinaryExpression.trySimplify(
+                                new OrExpression(e1, e2), es);
+                            break;
+                        case TranslationSymbolKind.IfOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new BlockConditionExpression(e1, true), es);
+                            break;
+                        case TranslationSymbolKind.ElseOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new BlockConditionExpression(e1, false), es) ;
+                            break;
                         /*case TranslationSymbolKind.AvgOperator:
-                           es.Push(ThreeArgumentsExpression.trySimplify(
+                           ex = ThreeArgumentsExpression.trySimplify(
                                 new AvgExpression(e1, e2, e3), es.Stack));
                             break;
                          case TranslationSymbolKind.StdOperator:
-                           es.Push(ThreeArgumentsExpression.trySimplify(
+                           ex = ThreeArgumentsExpression.trySimplify(
                                 new StdExpression(e1, e2, e3), es.Stack));
                             break;
-
                         case TranslationSymbolKind.CVOperator:
-                           es.Push(ThreeArgumentsExpression.trySimplify(
+                           ex = ThreeArgumentsExpression.trySimplify(
                                 new CVExpression(e1, e2, e3), es.Stack));
                             break;
                         case TranslationSymbolKind.AgeOfThePatientOperator:
-                           es.Push(ThreeArgumentsExpression.trySimplify(
+                           ex = ThreeArgumentsExpression.trySimplify(
                                 new AgeOfThePatientExpression(e1, e2, e3), es.Stack));
-                            break;*/
-                        case TranslationSymbolKind.Log10Operator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new Log10Expression(e2), es.ExpressionStack));
-                            break;
-                        case TranslationSymbolKind.SinOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new SinExpression(e2), es.ExpressionStack));
-                            break;
-                        /*case TranslationSymbolKind.IsNullOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new IsNullExpression(e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
                             break;
                         case TranslationSymbolKind.IsNotNullOperator:
-                           es.Push(UnaryExpression.trySimplify(
+                           ex = UnaryExpression.trySimplify(
                                 new IsNotNullExpression(e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
-                            break;*/
-                        case TranslationSymbolKind.CosOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new CosExpression(e2), es.ExpressionStack));
                             break;
-                        case TranslationSymbolKind.TanOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new TanExpression(e2), es.ExpressionStack));
+                        case TranslationSymbolKind.IsNullOperator:
+                           ex = UnaryExpression.trySimplify(
+                                new IsNullExpression(e1), es));
                             break;
-                        /*case TranslationSymbolKind.AbsOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new AbsExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.AcosOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new AcosExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.AsinOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new AsinExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.AtanOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new AtanExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.CeilingOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new CeilingExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.CoshOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new CoshExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.ExpOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new ExpExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.FloorOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new FloorExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.MaxOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new MaxExpression(e1, e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.MinOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new MinExpression(e1, e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.RoundOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new RoundExpression(e1, e2), es.Stack));
-                            break;
-
                         case TranslationSymbolKind.CountItemsOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                  new CountItemsExpression(e2), es.Stack));
                             break;
-
                         case TranslationSymbolKind.CheckOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                  new CheckExpression(e2), es.Stack));
                             break;
-
                         case TranslationSymbolKind.BusulfanCalculationOperator:
-                           es.Push(BinaryExpression.trySimplify(
+                           ex = BinaryExpression.trySimplify(
                                 new BusulfanCalculationExpression(e1, e2, (IFunction)operators[OperatorKind.Function]), es.Stack));
                             break;
-
                         case TranslationSymbolKind.ConvertToDaysOperator:
-                           es.Push(UnaryExpression.trySimplify(
+                           ex = UnaryExpression.trySimplify(
                                 new ConvertToDaysExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.SumColOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                 new SumColExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.SumRowOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                 new SumRowExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.AvgWksOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                 new AvgWksExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.SumWksOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                 new SumWksExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.CountSigOperator:
-                            es.Push(UnaryExpression.trySimplify(
+                            ex = UnaryExpression.trySimplify(
                                 new CountSigExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.SumOperator:
-                           es.Push(UnaryExpression.trySimplify(
+                           ex = UnaryExpression.trySimplify(
                                 new SumExpression(e2), es.Stack));
                             break;
-
-                        case TranslationSymbolKind.LogOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new LogExpression(e1, e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.SinhOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new SinhExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.TanhOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new TanhExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.TruncateOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new TruncateExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.UnaryMinusOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new UnaryMinusExpression(e2), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.IfOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new IfExpression(e2, (IIf)operators[OperatorKind.If] ), es.Stack));
-                            break;
-
+                         ------
                         case TranslationSymbolKind.ForEachOperator:                        
-                           es.Push(UnaryExpression.trySimplify(
+                           ex = UnaryExpression.trySimplify(
                                 new ForEachExpression(noForEach++, e2, (IForEach)operators[OperatorKind.ForEach]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.ElseOperator:
-                           es.Push(new ElseExpression());
-                            break;
-
-                        case TranslationSymbolKind.GreaterOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new GreterExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.GreaterOrEqualOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new GreaterOrEqualExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.LessOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new LessExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.LessOrEqualOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new LessOrEqualExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.EqualOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new EqualExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.NotEqualOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new NotEqualExpression(e1, e2, (ICompare)operators[OperatorKind.Compare]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.NegativeOperator:
-                           es.Push(UnaryExpression.trySimplify(
-                                new NegativExpression(e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.AndOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new AndExpression(e1, e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
-                            break;
-
-                        case TranslationSymbolKind.OrOperator:
-                           es.Push(BinaryExpression.trySimplify(
-                                new OrExpression(e1, e2, (ILogic)operators[OperatorKind.Logic]), es.Stack));
                             break;*/
+                    }
+                    if(ex != null)
+                    {
+                        es.Push(ex);
                     }
                 }
                 else if (X.Kind == TokenKind.Nonterminal)
@@ -416,43 +385,34 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 {                    
                     if (X.Kind == c.Kind)
                     {
+                        Expression ex = null;
                         switch (c.Kind)
                         {
                             case TokenKind.Double:
-                                {
-                                    ConstExpression constexpr = new ConstExpression(((DoubleToken)c).Value);
-                                    es.Push(constexpr);
-                                }
+                                ex = new ConstExpression(((DoubleToken)c).Value);
                                 break;
                             case TokenKind.String:
-                                {
-                                    ConstExpression constexpr = new ConstExpression(((StringToken)c).Value);
-                                    es.Push(constexpr);
-                                }
+                                ex = new ConstExpression(((StringToken)c).Value);
                                 break;
                             case TokenKind.DateTime:
-                                {
-                                    ConstExpression constexpr = new ConstExpression(((DateTimeToken)c).Value);
-                                    es.Push(constexpr);
-                                }
+                                ex = new ConstExpression(((DateTimeToken)c).Value);
                                 break;
                             case TokenKind.Variable:
-                                VariableExpression variableexpr = new VariableExpression(((VariableToken)c).Name);
-                                es.Push(variableexpr);
+                                ex = new VariableExpression(((VariableToken)c).Name);
                                 break;
                             case TokenKind.E:
-                               es.Push(new ConstExpression(Math.E));
+                                ex = new ConstExpression(Math.E);
                                 break;
-
                             case TokenKind.PI:
-                               es.Push(new ConstExpression(Math.PI));
+                                ex = new ConstExpression(Math.PI);
                                 break;
-                            /*case TokenKind.RightBrace:                        
-                               es.Push(new RightBraceExpression());
+                            case TokenKind.RightBrace:
+                                ex = new RightBraceExpression();
                                 break;
-                            case TokenKind.LeftBrace:
-                               es.Push(new LeftBraceExpression());
-                                break;*/
+                        }
+                        if (ex != null)
+                        {
+                            es.Push(ex);
                         }
                         input.MoveNext();
                         Token prev = c;
@@ -483,17 +443,13 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     }
                 }
             }
+            es.SetVariablesOrdinal();
         }
 
         public object Evaluate(object[] values)        
         {
-            values.AsEnumerable().SelectMany((o, index) => es.ExpressionStack.Where(e => e is VariableExpression && (e as VariableExpression).Ordinal == index).
-                Select(e => e as VariableExpression), (o, e) => new { Value = o, Expression = e }).ToList().ForEach((ve) =>
-            {
-                ve.Expression.SetValue(ve.Value);
-            });
-
-            return es.Value;
+            es.SetValues(values);
+            return es.Evaluate();
         }
         #endregion Methods
 

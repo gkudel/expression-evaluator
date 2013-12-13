@@ -16,6 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         internal ConstExpression(object value)
         {
             this._value = value;
+            this._evaluable = true;
         }
         #endregion Constructor
 
