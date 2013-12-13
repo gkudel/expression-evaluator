@@ -19,14 +19,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Logic
         #endregion Properties
 
         #region Evaluate
-        internal override Expression Evaluate(Expression[] values, out bool evaluated)
+        internal override Expression[] Evaluate(Expression[] values, out bool evaluated)
         {
             evaluated = false;
             if (values[0].BoolValue.HasValue && values[1].BoolValue.HasValue)
             {
                 evaluated = true;
-                return new ConstExpression(values[0].BoolValue.Value || values[1].BoolValue.Value);
-            }
+                return new Expression[] { new ConstExpression(values[0].BoolValue.Value || values[1].BoolValue.Value) };
+            } 
             return null;
         }
         #endregion Evaluate

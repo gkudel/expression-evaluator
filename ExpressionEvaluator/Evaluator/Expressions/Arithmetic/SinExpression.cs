@@ -20,13 +20,13 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Properties
 
         #region Evaluate
-        internal override Expression Evaluate(Expression[] values, out bool evaluated)
+        internal override Expression[] Evaluate(Expression[] values, out bool evaluated)
         {
             evaluated = false;
             if (values[0].NumericValue.HasValue)
             {
                 evaluated = true;
-                return new ConstExpression(Math.Sin(values[0].NumericValue.Value));
+                return new Expression[] { new ConstExpression(Math.Sin(values[0].NumericValue.Value)) };
             }
             return null;
         }

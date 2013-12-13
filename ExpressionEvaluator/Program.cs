@@ -11,12 +11,19 @@ namespace ExpressionEvaluator
     {
         static void Main(string[] args)
         {
-            DateTime d = DateTime.Now;
-            Parser p = Parser.GetInstance("if([A] > [B]) { if([A] > 15 ) { 'A > 15' } else { 'A > B' } } else { if([A] < 5) {'A < 5'} else {'A < B'} }");
-            for (int i = 0; i < 1000000; i++)
+            Random r = new Random();
+            Parser p = Parser.GetInstance("if([regdt] < '2012-10-12') { CountItems(ForEach([Rows]){ Check([1] > [2]) }) } else { 'za wczesnie' }");
+            object[] o = new object[100000];
+            for (int i = 0; i < 100000; i++)
             {
-                object ret = p.Evaluate(new object[] { i % 5, i %  5 - 3 });
+                object[] tab = new object[2];
+                tab[0] = r.Next();
+                tab[1] = r.Next();
+                o[i] = tab;
             }
+            
+            DateTime d = DateTime.Now;
+            object ret = p.Evaluate(new object[] { DateTime.Now, o });
             TimeSpan ts = DateTime.Now - d;
             Console.WriteLine(ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds);
             Console.ReadKey();

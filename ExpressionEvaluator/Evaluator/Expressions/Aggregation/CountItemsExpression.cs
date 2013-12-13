@@ -4,29 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
+namespace ExpressionEvaluator.Evaluator.Expressions.Aggregation
 {
-    internal class MinusExpression : BinaryExpression
+    internal class CountItemsExpression : UnaryExpression
     {
         #region Constructor
-        public MinusExpression(Expression e1, Expression e2)
-            : base (e1, e2)
+        public CountItemsExpression(Expression e1)
+            : base(e1)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MinusExpression"; } }
+        internal override string Name { get { return "CountItemsExpression"; } }
         #endregion Properties
 
         #region Evaluate
         internal override Expression[] Evaluate(Expression[] values, out bool evaluated)
         {
             evaluated = false;
-            if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
+            if (values[0].ArrayValue != null)
             {
                 evaluated = true;
-                return new Expression[] { new ConstExpression(values[0].NumericValue.Value - values[1].NumericValue.Value) };
+                return new Expression[] { new ConstExpression(values[0].ArrayValue.Count(o => o.Equals(true) || o.ToString() == "true")) };
             }
             return null;
         }
