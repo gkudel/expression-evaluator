@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExpressionEvaluator.Evaluator.Expressions.Block;
+using System.Collections;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -12,10 +13,8 @@ namespace ExpressionEvaluator.Evaluator.Expressions
     {
         #region Member
         protected bool _evaluable = false;
-        private Lazy<ListStack> _expressionstack = new Lazy<ListStack>(() =>
-        {
-            return new ListStack();
-        });
+        private Lazy<ListStack> _expressionstack;
+        private Lazy<string[]> _variables;
         #endregion Member
 
         #region Constructor
@@ -24,6 +23,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             InnerStack = false;
             LocalVariable = false;
             InnerStackCompleted = false;
+            _expressionstack = new Lazy<ListStack>(() =>
+            {
+                return new ListStack();
+            });
+            _variables = new Lazy<string[]>(() =>
+            {
+                return GetVariables();
+            });
         }
         #endregion Constructor
 
@@ -55,6 +62,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 return null;
             }
         }
+        
         internal int? IntegerValue
         {
             get
@@ -70,6 +78,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 return null;
             }
         }
+        
         internal string StringValue
         {
             get
@@ -85,7 +94,8 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 return null;
             }
         }
-        internal virtual bool? BoolValue
+
+        internal bool? BoolValue
         {
             get
             {
@@ -95,6 +105,37 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     if(Boolean.TryParse(Value.ToString(), out b))
                     {
                         return b;
+                    }
+                }
+                return null;
+            }
+        }
+
+        internal object[] ArrayValue
+        {
+            get
+            {
+                if (Value != null)
+                {
+                    object[] array = Value as object[];
+                    if (array != null)
+                    {
+                        return array;
+                    }
+                }
+                return null; 
+            }
+        }
+
+        internal DateTime? DataTimeValue
+        {
+            get
+            {
+                if (Value != null)
+                {                    
+                    if (Value is DateTime)
+                    {
+                        return (DateTime)Value;
                     }
                 }
                 return null;
@@ -158,10 +199,48 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     }
                     v.Ordinal = ordinals.IndexOf(v.VariableName);
                 }
-                if (e.InnerStack && !e.LocalVariable) SetVariablesOrdinal(e, ordinals);
+                if (e.InnerStack)
+                {
+                    if (e.LocalVariable)
+                    {
+                        SetVariablesOrdinal(e, new List<string>());
+                    }
+                    else
+                    {
+                        SetVariablesOrdinal(e, ordinals);
+                    }
+                }
             }
         }
         #endregion SetVariablesOrdinal
+
+        #region GetVariables
+        internal string[] Variables { get { return _variables.Value; } }
+
+        private string[] GetVariables()
+        {
+            List<string> vars = new List<string>();
+            GetVariables(this, vars);
+            return vars.ToArray();
+        }
+
+        private void GetVariables(Expression expression, List<string> vars)
+        {
+            foreach (Expression e in expression.ExpressionStack)
+            {
+                VariableExpression v = e as VariableExpression;
+                if (v != null)
+                {
+                    if(!vars.Contains(v.VariableName))
+                    {
+                        vars.Add(v.VariableName);
+                    }
+                }
+                if (e.InnerStack && !e.LocalVariable) GetVariables(e, vars);
+            }
+        }
+
+        #endregion GetVariables
 
         #region SetValues
         internal void SetValues(object[] values)
@@ -183,30 +262,10 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
         #endregion SetValues
 
-        #region Reset
-        private void Reset()
-        {
-            Reset(this);
-        }
-
-        private void Reset(Expression stackExpression)
-        {
-            foreach (Expression e in stackExpression.ExpressionStack)
-            {
-                if (e is BlockConditionExpression)
-                {
-                    ((BlockConditionExpression)e).ResetEvalueted();
-                }
-                if (e.InnerStack && !e.LocalVariable) Reset(e);
-            }
-        }
-        #endregion Reset
-
         #region Evaluate
         internal object Evaluate()
         {
             bool evaluated = false;
-            Reset(this);
             return Evaluate(out evaluated);
         }
 
@@ -227,9 +286,18 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     if (ExpressionStack.Count < e.ArgumentsCount) throw new EvaluateException("Syntax Error");
                     for (int i = e.ArgumentsCount - 1; i >= 0; i--) values[i] = evaluationstack.Pop();
                     evaluated = true;
-                    Expression ret = e.Evaluate(values, out evaluated);
-                    if (!evaluated) break;
-                    else evaluationstack.Push(ret);
+                    Expression[] ret = e.Evaluate(values, out evaluated);
+                    if (evaluated && ret != null)
+                    {
+                        for (int i = 0; i < ret.Length; i++)
+                        {
+                            evaluationstack.Push(ret[i]);
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
             if (evaluated)
@@ -243,6 +311,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                     else if (evaluationstack[0].BoolValue.HasValue)
                     {
                         return evaluationstack[0].BoolValue.Value;
+                    }
+                    else if (evaluationstack[0].ArrayValue != null)
+                    {
+                        return evaluationstack[0].ArrayValue;
+                    }
+                    else if (evaluationstack[0].DataTimeValue != null)
+                    {
+                        return evaluationstack[0].DataTimeValue;
                     }
                     else if (evaluationstack[0].StringValue != null)
                     {
@@ -264,13 +340,13 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             } 
         }
 
-        internal Expression Evaluate(Expression[] values)
+        internal Expression[] Evaluate(Expression[] values)
         {
             bool evalueted = false;
             return Evaluate(values, out evalueted);
         }
 
-        internal virtual Expression Evaluate(Expression[] values, out bool evalueted)
+        internal virtual Expression[] Evaluate(Expression[] values, out bool evalueted)
         {
             throw new EvaluateException("Syntax Error");
         }

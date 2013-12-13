@@ -20,18 +20,18 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Properties
 
         #region Evaluate
-        internal override Expression Evaluate(Expression[] values, out bool evaluated)
+        internal override Expression[] Evaluate(Expression[] values, out bool evaluated)
         {
             evaluated = false;
             if (values[0].NumericValue.HasValue && values[1].NumericValue.HasValue)
             {
                 evaluated = true;
-                return new ConstExpression(values[0].NumericValue.Value + values[1].NumericValue.Value);
-            }
+                return new Expression[] { new ConstExpression(values[0].NumericValue.Value + values[1].NumericValue.Value) };
+            } 
             else if (values[0].StringValue != null && values[1].StringValue != null)
             {
                 evaluated = true;
-                return new ConstExpression(values[0].StringValue + values[1].StringValue);
+                return new Expression[] { new ConstExpression(values[0].StringValue + values[1].StringValue) };
             }
             return null;
         }

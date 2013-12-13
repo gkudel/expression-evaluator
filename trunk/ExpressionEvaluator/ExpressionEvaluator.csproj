@@ -39,22 +39,57 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Evaluator\Exceptions.cs" />
+    <Compile Include="Evaluator\Expressions\Aggregation\CountItemsExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\AbsExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\AcosExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\AsinExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\AtanExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\CeilingExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\CosExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\CoshExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\DivideExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\ExpExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\FloorExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\Log10Expression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\LogExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\MaxExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\MinExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\MinusExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\MultiplyExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\PlusExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\PowerExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\RoundExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\SinExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\SinhExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\SqrtExpression.cs" />
     <Compile Include="Evaluator\Expressions\Arithmetic\TanExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\TanhExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\TruncateExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Arithmetic\UnaryMinusExpression.cs" />
     <Compile Include="Evaluator\Expressions\BinaryExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Block\BlockUnaryExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Block\BlockExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Block\RightBraceExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\EqualExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\GreaterOrEqualExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\GreterExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\LessExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\LessOrEqualExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Compare\NotEqualExpression.cs" />
     <Compile Include="Evaluator\Expressions\ConstExpression.cs" />
     <Compile Include="Evaluator\Expressions\Expression.cs" />
+    <Compile Include="Evaluator\Expressions\ForEach\ForEachExpression.cs" />
+    <Compile Include="Evaluator\Expressions\IfElse\IfElseExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Logic\AndExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Logic\NegativExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Logic\OrExpression.cs" />
+    <Compile Include="Evaluator\Expressions\Methods\CheckExpression.cs" />
     <Compile Include="Evaluator\Expressions\UnaryExpression.cs" />
     <Compile Include="Evaluator\Expressions\VariableExpression.cs" />
     <Compile Include="Evaluator\Grammar.cs" />
@@ -68,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

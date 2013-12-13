@@ -8,6 +8,10 @@ using ExpressionEvaluator.Evaluator.Expressions.Arithmetic;
 using ExpressionEvaluator.Evaluator.Expressions.Compare;
 using ExpressionEvaluator.Evaluator.Expressions.Logic;
 using ExpressionEvaluator.Evaluator.Expressions.Block;
+using ExpressionEvaluator.Evaluator.Expressions.IfElse;
+using ExpressionEvaluator.Evaluator.Expressions.ForEach;
+using ExpressionEvaluator.Evaluator.Expressions.Aggregation;
+using ExpressionEvaluator.Evaluator.Expressions.Methods;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -58,7 +62,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         #region Methods
         public string[] GetVariables()
         {
-            return new string[] { };// es.GetVariables();
+            return es.Variables;
         }
                
         private IEnumerator<string> Scan(IEnumerator<string> en)
@@ -281,11 +285,23 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                             break;
                         case TranslationSymbolKind.IfOperator:
                             ex = UnaryExpression.trySimplify(
-                                 new BlockConditionExpression(e1, true), es);
+                                 new IfElseExpression(e1, true), es);
                             break;
                         case TranslationSymbolKind.ElseOperator:
                             ex = UnaryExpression.trySimplify(
-                                 new BlockConditionExpression(e1, false), es) ;
+                                 new IfElseExpression(e1, false), es);
+                            break;
+                        case TranslationSymbolKind.ForEachOperator:                        
+                           ex = UnaryExpression.trySimplify(
+                                new ForEachExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.CountItemsOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new CountItemsExpression(e1), es);
+                            break;
+                        case TranslationSymbolKind.CheckOperator:
+                            ex = UnaryExpression.trySimplify(
+                                 new CheckExpression(e1), es);
                             break;
                         /*case TranslationSymbolKind.AvgOperator:
                            ex = ThreeArgumentsExpression.trySimplify(
@@ -310,14 +326,6 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                         case TranslationSymbolKind.IsNullOperator:
                            ex = UnaryExpression.trySimplify(
                                 new IsNullExpression(e1), es));
-                            break;
-                        case TranslationSymbolKind.CountItemsOperator:
-                            ex = UnaryExpression.trySimplify(
-                                 new CountItemsExpression(e2), es.Stack));
-                            break;
-                        case TranslationSymbolKind.CheckOperator:
-                            ex = UnaryExpression.trySimplify(
-                                 new CheckExpression(e2), es.Stack));
                             break;
                         case TranslationSymbolKind.BusulfanCalculationOperator:
                            ex = BinaryExpression.trySimplify(
@@ -351,11 +359,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                            ex = UnaryExpression.trySimplify(
                                 new SumExpression(e2), es.Stack));
                             break;
-                         ------
-                        case TranslationSymbolKind.ForEachOperator:                        
-                           ex = UnaryExpression.trySimplify(
-                                new ForEachExpression(noForEach++, e2, (IForEach)operators[OperatorKind.ForEach]), es.Stack));
-                            break;*/
+                         */
                     }
                     if(ex != null)
                     {

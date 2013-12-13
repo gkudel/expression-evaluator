@@ -27,7 +27,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                return Evaluate(new Expression[] { e1, e2 }).Value;
+                return Evaluate(new Expression[] { e1, e2 })[0].Value;
             }
         }
         #endregion Properties
