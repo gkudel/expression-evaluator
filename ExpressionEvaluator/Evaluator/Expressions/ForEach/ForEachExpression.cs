@@ -32,8 +32,8 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
             if (values[0].ArrayValue != null)
             {
                 evaluated = true;
-                ret = new object[values[0].ArrayValue.Count()];
-                Parallel.For(0, values[0].ArrayValue.Count(), (i, loopState) =>
+                ret = values[0].ArrayValue[values[0].ArrayValue.Count() - 1] as object[];
+                Parallel.For(0, values[0].ArrayValue.Count() - 1, (i, loopState) =>
                 {
                     object obj = values[0].ArrayValue[i];
                     bool localevaluated = true;
@@ -77,9 +77,9 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
                 new[] { counter, ret, exc },
                 lambda.Expression.Assign(exc, lambda.Expression.Constant(false)),
                 lambda.Expression.Assign(counter, lambda.Expression.Constant(0)),
-                lambda.Expression.Assign(ret, lambda.Expression.NewArrayBounds(typeof(object), lambda.Expression.ArrayLength(paramArray1))),
+                lambda.Expression.Assign(ret, lambda.Expression.Convert(lambda.Expression.ArrayIndex(paramArray1, lambda.Expression.Subtract(lambda.Expression.ArrayLength(paramArray1), lambda.Expression.Constant(1))), typeof(object[]))), // lambda.Expression.NewArrayBounds(typeof(object), lambda.Expression.ArrayLength(paramArray1))),
                 lambda.Expression.Loop(lambda.Expression.IfThenElse(
-                lambda.Expression.LessThan(counter, lambda.Expression.ArrayLength(paramArray1)),
+                lambda.Expression.LessThan(counter, lambda.Expression.Subtract(lambda.Expression.ArrayLength(paramArray1), lambda.Expression.Constant(1))),
                 lambda.Expression.Block(
                     new[] { row },
                     lambda.Expression.TryCatch(
@@ -92,7 +92,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
                         lambda.Expression.Label(loclalsucces),
                         ret)                                                
                         ,lambda.Expression.Catch(typeof(Exception), lambda.Expression.Block(
-                            lambda.Expression.Assign(counter, lambda.Expression.ArrayLength(paramArray1)),
+                            lambda.Expression.Assign(counter, lambda.Expression.Subtract(lambda.Expression.ArrayLength(paramArray1), lambda.Expression.Constant(1))),
                             lambda.Expression.Assign(exc, lambda.Expression.Constant(true)),
                             ret)))
                             ,lambda.Expression.PostIncrementAssign(counter)
