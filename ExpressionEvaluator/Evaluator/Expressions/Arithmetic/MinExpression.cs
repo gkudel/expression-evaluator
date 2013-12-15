@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class MinExpression : BinaryExpression
+    public class MinExpression : BinaryExpression
     {
         #region Constructor
         public MinExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MinExpression"; } }
+        public override string Name { get { return "MinExpression"; } }
         #endregion Properties
 
         #region Evaluate

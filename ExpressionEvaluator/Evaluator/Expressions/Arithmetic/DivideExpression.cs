@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class DivideExpression : BinaryExpression
+    public class DivideExpression : BinaryExpression
     {
         #region Constructor
         public DivideExpression(Expression e1, Expression e2)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "DivideExpression"; } }
+        public override string Name { get { return "DivideExpression"; } }
         #endregion Properties
 
         #region Evaluate

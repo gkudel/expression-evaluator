@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class ExpExpression : UnaryExpression
+    public class ExpExpression : UnaryExpression
     {
         #region Constructor
         public ExpExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "ExpExpression"; } }
+        public override string Name { get { return "ExpExpression"; } }
         #endregion Properties
 
         #region Evaluate

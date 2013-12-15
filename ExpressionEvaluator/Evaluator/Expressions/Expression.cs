@@ -9,12 +9,24 @@ using System.Collections;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
-    internal class Expression
+    public class Expression
     {
+        #region Enum
+        [Flags]
+        protected enum EvaluatedType { None = 0, Numeric = 1, Integer = 2, String = 4, Bool = 8, Array = 16, DataTime = 32 };
+        #endregion Enum
+
         #region Member
         protected bool _evaluable = false;
         private Lazy<ListStack> _expressionstack;
         private Lazy<string[]> _variables;
+        protected EvaluatedType _evaluatedType = EvaluatedType.None;
+        private double? _numericValue;
+        private int? _integerValue;
+        private string _stringValue;
+        private bool? _boolValue;
+        private object[] _arrayValue;
+        private DateTime? _dataTimeValue;
         #endregion Member
 
         #region Constructor
@@ -41,25 +53,19 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         internal ListStack ExpressionStack { get { return _expressionstack.Value; } }
         internal bool Evaluable { get { return _evaluable; }  }
         internal virtual bool Valuable { get { return false; } }
-        internal virtual string Name { get { return "Expression"; } }
+        public virtual string Name { get { return "Expression"; } }
         internal virtual int ArgumentsCount { get { return 0; } }
         internal virtual object Value { get { throw new EvaluateException("Syntax Error"); } }
         internal double? NumericValue
         {
             get
             {
-                if (Value != null)
+                if ((_evaluatedType & EvaluatedType.Numeric) != EvaluatedType.Numeric)
                 {
-                    double d = double.NaN;
-                    if (CmnTools.TryConvertToDouble(Value, out d))
-                    {
-                        if (!(double.IsNaN(d) || double.IsInfinity(d)))
-                        {
-                            return d;
-                        }
-                    }
+                    _numericValue = GetNumericValue();
+                    _evaluatedType |= EvaluatedType.Numeric;
                 }
-                return null;
+                return _numericValue;
             }
         }
         
@@ -67,15 +73,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                if (Value != null)
+                if ((_evaluatedType & EvaluatedType.Integer) != EvaluatedType.Integer)
                 {
-                    int i = -1;
-                    if (int.TryParse(Value.ToString(), out i))
-                    {
-                        return i;
-                    }
+                    _integerValue = GetIntegerValue();
+                    _evaluatedType |= EvaluatedType.Integer;
                 }
-                return null;
+                return _integerValue;
             }
         }
         
@@ -83,15 +86,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                if (Value != null 
-                    && Value.ToString() != double.NaN.ToString()
-                    && Value.ToString() != "Infinity"
-                    && Value.ToString() !=  double.PositiveInfinity.ToString()
-                    && Value.ToString() !=  double.NegativeInfinity.ToString())
+                if ((_evaluatedType & EvaluatedType.String) != EvaluatedType.String)
                 {
-                    return Value.ToString();
+                    _stringValue = GetStringValue();
+                    _evaluatedType |= EvaluatedType.String;
                 }
-                return null;
+                return _stringValue;
             }
         }
 
@@ -99,15 +99,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                if (Value != null)
+                if ((_evaluatedType & EvaluatedType.Bool) != EvaluatedType.Bool)
                 {
-                    bool b = false;
-                    if(Boolean.TryParse(Value.ToString(), out b))
-                    {
-                        return b;
-                    }
+                    _boolValue = GetBoolValue();
+                    _evaluatedType |= EvaluatedType.Bool;
                 }
-                return null;
+                return _boolValue;
             }
         }
 
@@ -115,15 +112,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                if (Value != null)
+                if ((_evaluatedType & EvaluatedType.Array) != EvaluatedType.Array)
                 {
-                    object[] array = Value as object[];
-                    if (array != null)
-                    {
-                        return array;
-                    }
+                    _arrayValue = GetArrayValue();
+                    _evaluatedType |= EvaluatedType.Array;
                 }
-                return null; 
+                return _arrayValue;
             }
         }
 
@@ -131,17 +125,97 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             get
             {
-                if (Value != null)
-                {                    
-                    if (Value is DateTime)
-                    {
-                        return (DateTime)Value;
-                    }
+                if ((_evaluatedType & EvaluatedType.DataTime) != EvaluatedType.DataTime)
+                {
+                    _dataTimeValue = GetDateTimeValue();
+                    _evaluatedType |= EvaluatedType.DataTime;
                 }
-                return null;
+                return _dataTimeValue;
             }
         }
         #endregion Properties
+
+        #region GetValue Method
+        private double? GetNumericValue()
+        {
+            if (Value != null)
+            {
+                double d = double.NaN;
+                if (CmnTools.TryConvertToDouble(Value, out d))
+                {
+                    if (!(double.IsNaN(d) || double.IsInfinity(d)))
+                    {
+                        return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private int? GetIntegerValue()
+        {
+            if (Value != null)
+            {
+                int i = -1;
+                if (int.TryParse(Value.ToString(), out i))
+                {
+                    return i;
+                }
+            }
+            return null; 
+        }
+
+        private string GetStringValue()
+        {
+            if (Value != null
+                && Value.ToString() != double.NaN.ToString()
+                && Value.ToString() != "Infinity"
+                && Value.ToString() != double.PositiveInfinity.ToString()
+                && Value.ToString() != double.NegativeInfinity.ToString())
+            {
+                return Value.ToString();
+            }
+            return null; 
+        }
+
+        private bool? GetBoolValue()
+        {
+            if (Value != null)
+            {
+                bool b = false;
+                if (Boolean.TryParse(Value.ToString(), out b))
+                {
+                    return b;
+                }
+            }
+            return null; 
+        }
+
+        private object[] GetArrayValue()
+        {
+            if (Value != null)
+            {
+                object[] array = Value as object[];
+                if (array != null)
+                {
+                    return array;
+                }
+            }
+            return null; 
+        }
+
+        private DateTime? GetDateTimeValue()
+        {
+            if (Value != null)
+            {
+                if (Value is DateTime)
+                {
+                    return (DateTime)Value;
+                }
+            }
+            return null;
+        }
+        #endregion GetValue Method
 
         #region Push & Pop
         internal virtual void Push(Expression e)
@@ -242,34 +316,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions
 
         #endregion GetVariables
 
-        #region SetValues
-        internal void SetValues(object[] values)
-        {
-            SetValues(this, values);
-        }
-
-        private void SetValues(Expression stackExpression, object[] values)
-        {
-            foreach (Expression e in stackExpression.ExpressionStack)
-            {
-                VariableExpression v = e as VariableExpression;
-                if (v != null)
-                {
-                    v.SetValue(values[v.Ordinal]);
-                }
-                if (e.InnerStack && !e.LocalVariable) SetValues(e, values);
-            }
-        }
-        #endregion SetValues
-
         #region Evaluate
-        internal object Evaluate()
+        internal object Evaluate(object[] variables)
         {
             bool evaluated = false;
-            return Evaluate(out evaluated);
+            return Evaluate(variables, out evaluated);
         }
 
-        internal object Evaluate(out bool evaluated)
+        internal object Evaluate(object[] variables, out bool evaluated)
         {
             evaluated = true;
             ListStack evaluationstack = new ListStack();
@@ -278,6 +332,11 @@ namespace ExpressionEvaluator.Evaluator.Expressions
                 Expression e = ExpressionStack[j];
                 if (e.Valuable)
                 {
+                    VariableExpression v = e as VariableExpression;
+                    if (v != null)
+                    {
+                        e = new ConstExpression(variables[v.Ordinal]);
+                    }
                     evaluationstack.Push(e);
                 }
                 else
@@ -351,5 +410,54 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             throw new EvaluateException("Syntax Error");
         }
         #endregion Evaluate
+
+        #region Evaluation Tree
+        internal IEnumerator<EvaluationNode> EvaluationTree()
+        {
+            return EvaluationTree(this, null);
+        }
+
+        private IEnumerator<EvaluationNode> EvaluationTree(Expression expression, EvaluationNode parentNode)
+        {
+            ListStack evaluationstack = new ListStack();
+            EvaluationNode prevNode = null;
+            for (int j = 0; j < expression.ExpressionStack.Count; j++)
+            {
+                Expression e = expression.ExpressionStack[j];
+                if (e.Valuable)
+                {
+                    evaluationstack.Push(e);
+                }
+                else
+                {
+                    Expression[] values = new Expression[e.ArgumentsCount];
+                    if (expression.ExpressionStack.Count < e.ArgumentsCount) throw new EvaluateException("Syntax Error");
+                    for (int i = e.ArgumentsCount - 1; i >= 0; i--) values[i] = evaluationstack.Pop();
+                    evaluationstack.Push(e);
+                    prevNode = new EvaluationNode() { Node = e, Params = values, Prevoius = prevNode, ParentNode = parentNode };
+                    yield return prevNode;
+                    if (e.InnerStack)
+                    {
+                        IEnumerator<EvaluationNode> enChild = e.EvaluationTree(e, prevNode);
+                        while (enChild.MoveNext())
+                        {
+                            EvaluationNode childNode = enChild.Current;
+                            yield return childNode;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion Evaluation Tree
     }
+
+    #region Evaluation Node
+    public class EvaluationNode
+    {
+        public EvaluationNode Prevoius { get; internal set; }
+        public Expression Node { get; internal set; }
+        public Expression[] Params { get; internal set; }
+        public EvaluationNode ParentNode { get; internal set; }
+    }
+    #endregion Evaluation Node
 }

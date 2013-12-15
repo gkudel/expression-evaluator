@@ -3,7 +3,7 @@ using GcmCmnTools;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
-    public enum TokenKind
+    internal enum TokenKind
     {
         /* terminal symbols*/
         Double,
@@ -83,7 +83,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         End
     }
 
-    enum TokenGroup
+    internal enum TokenGroup
     {
         Unknow,
         Variable,
@@ -103,7 +103,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         ForEach
     }
 
-    enum NonterminalSymbolKind
+    internal enum NonterminalSymbolKind
     {
         C,
         Co,
@@ -118,7 +118,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         G
     }
 
-    enum TranslationSymbolKind
+    internal enum TranslationSymbolKind
     {
         PlusOperator,
         MinusOperator,
@@ -178,14 +178,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         CountSigOperator
     }
 
-    abstract class Token
+    abstract internal class Token
     {
         public abstract TokenKind Kind { get; }
         public abstract TokenGroup Group { get; }
         public override string ToString() { return Kind.ToString(); }
     }
 
-    class BareToken : Token
+    internal class BareToken : Token
     {
         public BareToken(TokenKind tk) { this.tk = tk; } 
         public BareToken(TokenKind tk, TokenGroup tp) { this.tk = tk; this.tp = tp; } 
@@ -196,7 +196,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         public override string ToString() { return tk.ToString(); }
     }
 
-    class DoubleToken : Token
+    internal class DoubleToken : Token
     {
         public DoubleToken(double value) { this.Value = value; } 
         public override TokenKind Kind { get { return TokenKind.Double; } }
@@ -208,7 +208,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
     }
 
-    class StringToken : Token
+    internal class StringToken : Token
     {
         public StringToken(string value) { this.Value = value; }
         public override TokenKind Kind { get { return TokenKind.String; } }
@@ -220,7 +220,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
     }
 
-    class DateTimeToken : Token
+    internal class DateTimeToken : Token
     {
         public DateTimeToken(DateTime value) { this.Value = value; }
         public override TokenKind Kind { get { return TokenKind.DateTime; } }
@@ -232,7 +232,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
     }
 
-    class VariableToken : Token
+    internal class VariableToken : Token
     {
         public VariableToken(string name)
         {
@@ -247,7 +247,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
     }
 
-    class NonterminalSymbol : Token
+    internal class NonterminalSymbol : Token
     {
         public NonterminalSymbol(NonterminalSymbolKind ntk) { this.ntk = ntk; }
         public override TokenKind Kind { get { return TokenKind.Nonterminal; } }
@@ -260,7 +260,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         }
     }
 
-    class TranslationSymbol : Token
+    internal class TranslationSymbol : Token
     {
         public TranslationSymbol(TranslationSymbolKind tsk) { this.tsk = tsk; }
         public override TokenKind Kind { get { return TokenKind.Translation; } }

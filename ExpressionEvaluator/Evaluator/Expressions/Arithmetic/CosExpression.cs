@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class CosExpression : UnaryExpression
+    public class CosExpression : UnaryExpression
     {
         #region Constructor
         public CosExpression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "CosExpression"; } }
+        public override string Name { get { return "CosExpression"; } }
         #endregion Properties
 
         #region Evaluate

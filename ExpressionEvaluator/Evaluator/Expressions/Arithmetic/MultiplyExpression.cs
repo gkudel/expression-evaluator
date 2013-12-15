@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class MultiplyExpression : BinaryExpression
+    public class MultiplyExpression : BinaryExpression
     {
         #region Constructor
         public MultiplyExpression(Expression e1, Expression e2)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MultiplyExpression"; } }
+        public override string Name { get { return "MultiplyExpression"; } }
         #endregion Properties
 
         #region Evaluate

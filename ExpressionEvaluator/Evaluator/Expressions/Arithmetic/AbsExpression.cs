@@ -5,17 +5,17 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class AbsExpression : UnaryExpression
+    public class AbsExpression : UnaryExpression
     {
         #region Constructor
-        public AbsExpression(Expression e1)
+        internal AbsExpression(Expression e1)
             : base(e1)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "AbsExpression"; } }
+        public override string Name { get { return "AbsExpression"; } }
         #endregion Properties
 
         #region Evaluate

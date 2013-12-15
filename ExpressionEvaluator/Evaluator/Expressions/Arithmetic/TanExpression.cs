@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class TanExpression : UnaryExpression
+    public class TanExpression : UnaryExpression
     {
         #region Constructor
         public TanExpression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "TanExpression"; } }
+        public override string Name { get { return "TanExpression"; } }
         #endregion Properties
 
         #region Evaluate

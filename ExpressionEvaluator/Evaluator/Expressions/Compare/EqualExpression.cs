@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Compare
 {
-    internal class EqualExpression : BinaryExpression
+    public class EqualExpression : BinaryExpression
     {
         #region Constructor
         public EqualExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Compare
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "EqualExpression"; } }
+        public override string Name { get { return "EqualExpression"; } }
         #endregion Properties
 
         #region Evaluate

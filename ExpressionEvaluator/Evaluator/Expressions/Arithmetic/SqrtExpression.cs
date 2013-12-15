@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class SqrtExpression : UnaryExpression
+    public class SqrtExpression : UnaryExpression
     {
         #region Constructor
         public SqrtExpression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "SqrtExpression"; } }
+        public override string Name { get { return "SqrtExpression"; } }
         #endregion Properties
 
         #region Evaluate

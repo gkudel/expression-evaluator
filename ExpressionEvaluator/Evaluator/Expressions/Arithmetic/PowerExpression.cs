@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class PowerExpression : BinaryExpression
+    public class PowerExpression : BinaryExpression
     {
         #region Constructor
         public PowerExpression(Expression e1, Expression e2)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "PowerExpression"; } }
+        public override string Name { get { return "PowerExpression"; } }
         #endregion Properties
 
         #region Evaluate

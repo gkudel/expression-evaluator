@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
-    internal class UnaryExpression : Expression
+    public class UnaryExpression : Expression
     {
         #region Members
         private Expression e1;

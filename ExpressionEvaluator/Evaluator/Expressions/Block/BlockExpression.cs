@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Block
 {
-    internal class BlockExpression : Expression
+    public class BlockExpression : Expression
     {
         #region Constructor
         public BlockExpression()
@@ -18,14 +18,14 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Block
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "BlockExpression"; } }
+        public override string Name { get { return "BlockExpression"; } }
         #endregion Properties
 
         #region Evaluate
         internal override Expression[] Evaluate(Expression[] values, out bool evaluated)
         {
             evaluated = true;
-            object o = base.Evaluate(out evaluated);
+            object o = base.Evaluate(null, out evaluated);
             if (evaluated)
             {
                 return new Expression[] { new ConstExpression(o) };

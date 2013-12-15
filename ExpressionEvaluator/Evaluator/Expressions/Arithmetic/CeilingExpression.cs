@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class CeilingExpression : UnaryExpression
+    public class CeilingExpression : UnaryExpression
     {
         #region Constructor
         public CeilingExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "CeilingExpression"; } }
+        public override string Name { get { return "CeilingExpression"; } }
         #endregion Properties
 
         #region Evaluate

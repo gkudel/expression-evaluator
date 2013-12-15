@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
 {
-    internal class ForEachExpression : BlockUnaryExpression
+    public class ForEachExpression : BlockUnaryExpression
     {
         #region Constructor
         public ForEachExpression(Expression e1)
@@ -19,7 +19,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "ForEachExpression"; } }
+        public override string Name { get { return "ForEachExpression"; } }
         #endregion Properties
 
         #region Evaluate
@@ -31,29 +31,28 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
             {
                 evaluated = true;
                 ret = new object[values[0].ArrayValue.Count()];
-                Parallel.For(0, values[0].ArrayValue.Count(), (i,  loopState) =>
+                Parallel.For(0, values[0].ArrayValue.Count(), (i, loopState) =>
                 {
-                    bool localEvaluated = true;
                     object obj = values[0].ArrayValue[i];
+                    bool localevaluated = true;
                     object[] row = obj as object[];
                     if (row != null)
                     {
-                        SetValues(row);
-                        object o = base.Evaluate(out localEvaluated);
-                        if (localEvaluated)
+                        object o = base.Evaluate(row, out localevaluated);
+                        if (localevaluated)
                         {
                             ret[i] = o;
                         }
                         else
-                        {                            
+                        {
                             loopState.Break();
                         }
                     }
                     else
                     {
-                        localEvaluated = false;
+                        localevaluated = false;
                         loopState.Break();
-                    }
+                   }
                 });
                 evaluated = ret.Count(o => o == null) == 0;
             }

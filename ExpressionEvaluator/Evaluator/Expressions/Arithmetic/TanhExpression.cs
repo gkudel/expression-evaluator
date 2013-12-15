@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class TanhExpression : UnaryExpression
+    public class TanhExpression : UnaryExpression
     {
         #region Constructor
         public TanhExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "TanhExpression"; } }
+        public override string Name { get { return "TanhExpression"; } }
         #endregion Properties
 
         #region Evaluate

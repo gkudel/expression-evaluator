@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Block
 {
-    internal class RightBraceExpression : Expression
+    public class RightBraceExpression : Expression
     {
     }
 }

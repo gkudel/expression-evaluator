@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Methods
 {
-    internal class CheckExpression : UnaryExpression
+    public class CheckExpression : UnaryExpression
     {
         #region Constructor
         public CheckExpression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Methods
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "CheckExpression"; } }
+        public override string Name { get { return "CheckExpression"; } }
         #endregion Properties
 
         #region Evaluate
