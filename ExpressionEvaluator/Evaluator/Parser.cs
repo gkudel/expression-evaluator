@@ -12,6 +12,7 @@ using ExpressionEvaluator.Evaluator.Expressions.IfElse;
 using ExpressionEvaluator.Evaluator.Expressions.ForEach;
 using ExpressionEvaluator.Evaluator.Expressions.Aggregation;
 using ExpressionEvaluator.Evaluator.Expressions.Methods;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -31,6 +32,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         private bool _calculationSucced = false;
         private string _expression = string.Empty;
         private static List<Parser> _expressions;
+        private Func<object[], object> _lambdaExpression;
         #endregion Members
 
         #region Constructor
@@ -43,6 +45,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         {
             DoParse(new Scanner().Scan(expression));
             _expression = expression;
+            _lambdaExpression = null;
         }
         #endregion
 
@@ -450,9 +453,36 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             es.SetVariablesOrdinal();
         }
 
+        public void Compile()
+        {
+            lambda.ParameterExpression value = lambda.Expression.Parameter(typeof(object[]), "value");
+            lambda.ParameterExpression result = lambda.Expression.Variable(typeof(object), "result");
+            lambda.LabelTarget fault = lambda.Expression.Label("fault");
+            lambda.LabelTarget ret = lambda.Expression.Label("return");
+
+            lambda.BlockExpression block = lambda.Expression.Block(
+                new[] { result },
+                lambda.Expression.Assign(result, es.Compile(value, fault)),
+                result,
+                lambda.Expression.Goto(ret),
+                lambda.Expression.Label(fault),
+                lambda.Expression.Assign(result, lambda.Expression.Constant(null)),
+                lambda.Expression.Label(ret),
+                result
+                );
+            _lambdaExpression = lambda.Expression.Lambda<Func<object[], object>>(block, value).Compile();
+        }
+
         public object Evaluate(object[] values)
         {
-            return es.Evaluate(values);
+            if (_lambdaExpression != null)
+            {
+                return _lambdaExpression(values);
+            }
+            else
+            {
+                return es.Evaluate(values);
+            }
         }
 
         public IEnumerator<EvaluationNode> EvaluationTree

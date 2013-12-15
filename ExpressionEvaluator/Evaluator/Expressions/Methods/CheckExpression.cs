@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Methods
 {
@@ -12,6 +13,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Methods
         public CheckExpression(Expression e1)
             : base(e1)
         {
+            _acceptedType = AcceptedType.Bool;
         }
         #endregion Constructor
 
@@ -41,5 +43,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Methods
             return null;
         }
         #endregion Evaluate
+
+        #region Lambda Compilation
+        internal override lambda.Expression CompileBoolBlock(lambda.ParameterExpression paramBool1, lambda.LabelTarget fault)
+        {
+            return paramBool1;
+        }
+        #endregion Lambda Compilation
     }
 }

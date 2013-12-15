@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -47,5 +48,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             _value = value;
         }
         #endregion Set Value
+
+        #region Lambda Compile
+        internal override lambda.Expression ParametrExpression(lambda.ParameterExpression values)
+        {
+            return lambda.Expression.Convert(lambda.Expression.ArrayIndex(values, lambda.Expression.Constant(Ordinal)), typeof(object));
+        }
+        #endregion Lambda Compile 
     }
 }

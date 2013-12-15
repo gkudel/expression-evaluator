@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Compare
 {
@@ -35,5 +36,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Compare
             return null;
         }
         #endregion Evaluate
+
+        #region Lambda Compilation
+        internal override lambda.Expression CompileNumericBlock(lambda.ParameterExpression paramNumeric1, lambda.ParameterExpression paramNumeric2)
+        {
+            return lambda.Expression.GreaterThan(paramNumeric1, paramNumeric2);
+        }
+        #endregion Lambda Compilation
     }
 }
