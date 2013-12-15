@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Compare
 {
-    internal class NotEqualExpression : BinaryExpression
+    public class NotEqualExpression : BinaryExpression
     {
         #region Constructor
         public NotEqualExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Compare
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "NotEqualExpression"; } }
+        public override string Name { get { return "NotEqualExpression"; } }
         #endregion Properties
 
         #region Evaluate

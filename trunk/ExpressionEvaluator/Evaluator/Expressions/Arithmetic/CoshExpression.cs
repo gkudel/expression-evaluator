@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class CoshExpression : UnaryExpression
+    public class CoshExpression : UnaryExpression
     {
         #region Constructor
         public CoshExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "CoshExpression"; } }
+        public override string Name { get { return "CoshExpression"; } }
         #endregion Properties
 
         #region Evaluate

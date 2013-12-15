@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class TruncateExpression : UnaryExpression
+    public class TruncateExpression : UnaryExpression
     {
         #region Constructor
         public TruncateExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "TruncateExpression"; } }
+        public override string Name { get { return "TruncateExpression"; } }
         #endregion Properties
 
         #region Evaluate

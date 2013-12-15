@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class RoundExpression : BinaryExpression
+    public class RoundExpression : BinaryExpression
     {
         #region Constructor
         public RoundExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "RoundExpression"; } }
+        public override string Name { get { return "RoundExpression"; } }
         #endregion Properties
 
         #region Evaluate

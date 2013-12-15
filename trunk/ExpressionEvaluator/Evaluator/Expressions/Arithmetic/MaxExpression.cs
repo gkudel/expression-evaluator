@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class MaxExpression : BinaryExpression
+    public class MaxExpression : BinaryExpression
     {
         #region Constructor
         public MaxExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "MaxExpression"; } }
+        public override string Name { get { return "MaxExpression"; } }
         #endregion Properties
 
         #region Evaluate

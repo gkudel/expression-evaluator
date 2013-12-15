@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.IfElse
 {
-    internal class IfElseExpression : BlockUnaryExpression
+    public class IfElseExpression : BlockUnaryExpression
     {
         #region Members
         private bool _condition = true;
@@ -22,7 +22,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.IfElse
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "IfElseExpression"; } }
+        public override string Name { get { return "IfElseExpression"; } }
         #endregion Properties
 
         #region Evaluate
@@ -34,7 +34,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.IfElse
                 evaluated = true;
                 if (values[0].BoolValue.Value == _condition)
                 {
-                    object o = base.Evaluate(out evaluated);
+                    object o = base.Evaluate(null, out evaluated);
                     if(evaluated)
                     {
                         if (_condition)

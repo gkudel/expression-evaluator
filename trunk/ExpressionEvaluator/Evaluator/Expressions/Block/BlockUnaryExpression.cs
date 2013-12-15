@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Block
 {
-    internal class BlockUnaryExpression : UnaryExpression
+    public class BlockUnaryExpression : UnaryExpression
     {
         #region Constructor
         public BlockUnaryExpression(Expression e1)
@@ -17,7 +17,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Block
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "BlockUnaryExpression"; } }
+        public override string Name { get { return "BlockUnaryExpression"; } }
         #endregion Properties
 
         #region Evaluate

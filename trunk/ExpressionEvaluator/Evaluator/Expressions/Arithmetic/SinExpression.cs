@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class SinExpression : UnaryExpression
+    public class SinExpression : UnaryExpression
     {
         #region Constructor
         public SinExpression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "SinExpression"; } }
+        public override string Name { get { return "SinExpression"; } }
         #endregion Properties
 
         #region Evaluate

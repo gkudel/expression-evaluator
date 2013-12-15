@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Logic
 {
-    internal class NegativExpression : UnaryExpression
+    public class NegativExpression : UnaryExpression
     {
         #region Constructor
         public NegativExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Logic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "NegativExpression"; } }
+        public override string Name { get { return "NegativExpression"; } }
         #endregion Properties
 
         #region Evaluate

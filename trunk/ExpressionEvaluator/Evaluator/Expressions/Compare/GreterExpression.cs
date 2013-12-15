@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Compare
 {
-    internal class GreterExpression : BinaryExpression
+    public class GreterExpression : BinaryExpression
     {
         #region Constructor
         public GreterExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Compare
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "GreterExpression"; } }
+        public override string Name { get { return "GreterExpression"; } }
         #endregion Properties
 
         #region Evaluate

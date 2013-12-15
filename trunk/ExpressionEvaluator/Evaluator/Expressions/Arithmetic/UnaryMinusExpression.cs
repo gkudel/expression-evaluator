@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class UnaryMinusExpression : UnaryExpression
+    public class UnaryMinusExpression : UnaryExpression
     {
         #region Constructor
         public UnaryMinusExpression(Expression e1)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "UnaryMinusExpression"; } }
+        public override string Name { get { return "UnaryMinusExpression"; } }
         #endregion Properties
 
         #region Evaluate

@@ -450,10 +450,17 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             es.SetVariablesOrdinal();
         }
 
-        public object Evaluate(object[] values)        
+        public object Evaluate(object[] values)
         {
-            es.SetValues(values);
-            return es.Evaluate();
+            return es.Evaluate(values);
+        }
+
+        public IEnumerator<EvaluationNode> EvaluationTree
+        {
+            get
+            {
+                return es.EvaluationTree();
+            }
         }
         #endregion Methods
 

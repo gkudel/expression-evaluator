@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
-    class Scanner
+    internal class Scanner
     {
         private Dictionary<char, Token> simpleTokens =
             new Dictionary<char, Token>();

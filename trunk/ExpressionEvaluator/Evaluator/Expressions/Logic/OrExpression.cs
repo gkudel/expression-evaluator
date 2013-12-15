@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Logic
 {
-    internal class OrExpression : BinaryExpression
+    public class OrExpression : BinaryExpression
     {
         #region Constructor
         public OrExpression(Expression e1, Expression e2)
@@ -15,7 +15,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Logic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "OrExpression"; } }
+        public override string Name { get { return "OrExpression"; } }
         #endregion Properties
 
         #region Evaluate

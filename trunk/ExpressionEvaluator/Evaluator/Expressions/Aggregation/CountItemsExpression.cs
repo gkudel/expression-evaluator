@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Aggregation
 {
-    internal class CountItemsExpression : UnaryExpression
+    public class CountItemsExpression : UnaryExpression
     {
         #region Constructor
-        public CountItemsExpression(Expression e1)
+        internal CountItemsExpression(Expression e1)
             : base(e1)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "CountItemsExpression"; } }
+        public override string Name { get { return "CountItemsExpression"; } }
         #endregion Properties
 
         #region Evaluate
@@ -26,7 +26,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Aggregation
             if (values[0].ArrayValue != null)
             {
                 evaluated = true;
-                return new Expression[] { new ConstExpression(values[0].ArrayValue.Count(o => o.Equals(true) || o.ToString() == "true")) };
+                return new Expression[] { new ConstExpression(values[0].ArrayValue.Count(o => o != null && o.Equals(true) || o.ToString() == "true")) };
             }
             return null;
         }

@@ -5,17 +5,17 @@ using System.Text;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class AcosExpression : UnaryExpression
+    public class AcosExpression : UnaryExpression
     {
         #region Constructor
-        public AcosExpression(Expression e1)
+        internal AcosExpression(Expression e1)
             : base(e1)
         {
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "AcosExpression"; } }
+        public override string Name { get { return "AcosExpression"; } }
         #endregion Properties
 
         #region Evaluate

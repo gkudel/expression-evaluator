@@ -2,42 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
-    internal class VariableExpression : Expression
+    public class VariableExpression : Expression
     {
         #region Members
-        private object _value;
         private string _name;
         private int _ordinal;
+        private object _value;
         #endregion Members
 
         #region Constructor
         internal VariableExpression(string name)
             : base()
         {
-            _value = null;
-            _name = name;
-            _ordinal = 0;
+            this._name = name;
+            this._ordinal = 0;
+        }
+
+        internal VariableExpression(string name, object value)
+            : this(name)
+        {
+            this._value = value;
+            this._evaluatedType = Expression.EvaluatedType.None;
         }
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "VariableExpression"; } }
+        public override string Name { get { return "VariableExpression"; } }
+        public string VariableName { get { return _name; } }
         internal override int ArgumentsCount { get { return 0; } }
         internal override object Value { get { return _value; } }
         internal override bool Valuable { get { return true; } }
-        internal string VariableName { get { return _name; } }
-        internal int Ordinal { get { return _ordinal; } set { _ordinal = value; } }                
+        internal int Ordinal { get { return _ordinal; } set { _ordinal = value; } }         
         #endregion Properties
 
-        #region Methods
+        #region Set Value
         internal void SetValue(object value)
         {
+            _evaluatedType = EvaluatedType.None;
             _value = value;
         }
-        #endregion Methods
+        #endregion Set Value
     }
 }

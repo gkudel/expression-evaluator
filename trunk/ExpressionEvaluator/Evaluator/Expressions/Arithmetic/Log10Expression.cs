@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
 {
-    internal class Log10Expression : UnaryExpression
+    public class Log10Expression : UnaryExpression
     {
         #region Constructor
         public Log10Expression(Expression e1)
@@ -16,7 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.Arithmetic
         #endregion Constructor
 
         #region Properties
-        internal override string Name { get { return "Log10Expression"; } }
+        public override string Name { get { return "Log10Expression"; } }
         #endregion Properties
 
         #region Evaluate
