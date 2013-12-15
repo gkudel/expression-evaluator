@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ExpressionEvaluator.Evaluator.Expressions.Block;
 using System.Collections;
+using lambda = System.Linq.Expressions;
+using System.Reflection;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -14,6 +16,8 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         #region Enum
         [Flags]
         protected enum EvaluatedType { None = 0, Numeric = 1, Integer = 2, String = 4, Bool = 8, Array = 16, DataTime = 32 };
+        [Flags]
+        protected enum AcceptedType { Numeric = 1, String = 2, Bool = 4, Array = 8, DataTime = 16 };
         #endregion Enum
 
         #region Member
@@ -21,15 +25,22 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         private Lazy<ListStack> _expressionstack;
         private Lazy<string[]> _variables;
         protected EvaluatedType _evaluatedType = EvaluatedType.None;
+        protected AcceptedType _acceptedType = AcceptedType.Numeric;
         private double? _numericValue;
         private int? _integerValue;
         private string _stringValue;
         private bool? _boolValue;
         private object[] _arrayValue;
         private DateTime? _dataTimeValue;
+        protected static MethodInfo _miChangeType;        
         #endregion Member
 
         #region Constructor
+        static Expression()
+        {
+            _miChangeType = typeof(Convert).GetMethod("ChangeType", new[] { typeof(object), typeof(Type) });
+        }
+
         internal Expression()
         {
             InnerStack = false;
@@ -449,6 +460,40 @@ namespace ExpressionEvaluator.Evaluator.Expressions
             }
         }
         #endregion Evaluation Tree
+
+        #region Lambda Compilation
+        internal virtual lambda.Expression ParametrExpression(lambda.ParameterExpression values)
+        {
+            throw new Exception("Syntax Error");
+        }
+
+        internal lambda.BlockExpression Compile(lambda.ParameterExpression values, lambda.LabelTarget fault)
+        {
+            Stack<lambda.Expression> stack = new Stack<lambda.Expression>();
+            for (int j = 0; j < ExpressionStack.Count; j++)
+            {
+                Expression e = ExpressionStack[j];
+                if (e.Valuable)
+                {
+                    stack.Push(e.ParametrExpression(values));
+                }
+                else
+                {
+                    lambda.Expression[] param = new lambda.Expression[e.ArgumentsCount];
+                    if (ExpressionStack.Count < e.ArgumentsCount) throw new EvaluateException("Syntax Error");
+                    for (int i = e.ArgumentsCount - 1; i >= 0; i--) param[i] = stack.Pop();
+                    stack.Push(e.Compile(param, fault));
+                }
+            }
+            if (stack.Count == 1 && stack.Peek() is lambda.BlockExpression) return (lambda.BlockExpression)stack.Pop();
+            else throw new EvaluateException("Syntax Error");
+        }
+
+        internal virtual lambda.Expression Compile(lambda.Expression[] param, lambda.LabelTarget fault)
+        {
+            throw new EvaluateException("Syntax Error");
+        }
+        #endregion Lambda Compilation
     }
 
     #region Evaluation Node

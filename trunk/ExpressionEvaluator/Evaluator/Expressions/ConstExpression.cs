@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions
 {
@@ -27,5 +28,12 @@ namespace ExpressionEvaluator.Evaluator.Expressions
         internal override object Value { get { return _value; } }
         internal override bool Valuable { get { return true; } }
         #endregion Properties
+
+        #region Lambda Compile 
+        internal override lambda.Expression ParametrExpression(lambda.ParameterExpression values)
+        {
+            return lambda.Expression.Convert(lambda.Expression.Constant(Value), typeof(object));
+        }
+        #endregion Lambda Compile 
     }
 }

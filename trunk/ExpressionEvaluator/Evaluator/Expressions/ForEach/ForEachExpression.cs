@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lambda = System.Linq.Expressions;
 
 namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
 {
@@ -15,6 +16,7 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
             : base(e1)
         {
             LocalVariable = true;
+            _acceptedType = AcceptedType.Array;
         }
         #endregion Constructor
 
@@ -60,5 +62,47 @@ namespace ExpressionEvaluator.Evaluator.Expressions.ForEach
         }
         #endregion Evaluate
 
+        #region Lambda Compilation
+        internal override lambda.Expression CompileArrayBlock(lambda.ParameterExpression paramArray1, lambda.LabelTarget fault)
+        {
+            lambda.ParameterExpression counter = lambda.Expression.Variable(typeof(int), "counter");
+            lambda.ParameterExpression exc = lambda.Expression.Variable(typeof(bool), "exc");
+            lambda.ParameterExpression row = lambda.Expression.Variable(typeof(object[]), "row");
+            lambda.ParameterExpression ret = lambda.Expression.Variable(typeof(object[]), "ret");
+            lambda.LabelTarget label = lambda.Expression.Label(typeof(object));
+            lambda.LabelTarget loclalfault = lambda.Expression.Label();
+            lambda.LabelTarget loclalsucces = lambda.Expression.Label();
+
+            lambda.BlockExpression foorEachBlock = lambda.Expression.Block(
+                new[] { counter, ret, exc },
+                lambda.Expression.Assign(exc, lambda.Expression.Constant(false)),
+                lambda.Expression.Assign(counter, lambda.Expression.Constant(0)),
+                lambda.Expression.Assign(ret, lambda.Expression.NewArrayBounds(typeof(object), lambda.Expression.ArrayLength(paramArray1))),
+                lambda.Expression.Loop(lambda.Expression.IfThenElse(
+                lambda.Expression.LessThan(counter, lambda.Expression.ArrayLength(paramArray1)),
+                lambda.Expression.Block(
+                    new[] { row },
+                    lambda.Expression.TryCatch(
+                        lambda.Expression.Block(
+                        lambda.Expression.Assign(row, lambda.Expression.Convert(lambda.Expression.ArrayIndex(paramArray1, counter), typeof(object[]))),
+                        lambda.Expression.Assign(lambda.Expression.ArrayAccess(ret, counter), lambda.Expression.Convert(base.Compile(row, loclalfault), typeof(object))),
+                        lambda.Expression.Goto(loclalsucces),
+                        lambda.Expression.Label(loclalfault),
+                        lambda.Expression.Assign(lambda.Expression.ArrayAccess(ret, counter), lambda.Expression.Constant(null)),
+                        lambda.Expression.Label(loclalsucces),
+                        ret)                                                
+                        ,lambda.Expression.Catch(typeof(Exception), lambda.Expression.Block(
+                            lambda.Expression.Assign(counter, lambda.Expression.ArrayLength(paramArray1)),
+                            lambda.Expression.Assign(exc, lambda.Expression.Constant(true)),
+                            ret)))
+                            ,lambda.Expression.PostIncrementAssign(counter)
+                ),
+                lambda.Expression.IfThenElse(exc, lambda.Expression.Goto(fault),
+                lambda.Expression.Break(label, lambda.Expression.Convert(ret, typeof(object))))
+                ),label)
+            );
+            return foorEachBlock;
+        }
+        #endregion Lambda Compilation
     }
 }
